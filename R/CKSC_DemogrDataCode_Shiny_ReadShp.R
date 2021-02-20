@@ -1,49 +1,27 @@
 # Author: Thomas Quintero
 # Date Created: 9/15/2020
 # Date Updated: 1/19/2021
-# Description: To create a Shapefile of ACS data by Census Tract, Zip Code, Minor Civil Division, or Parish Boundary
+# Description: To visualize a Shapefile of ACS data by Census Tract, Zip Code
 
 library(shiny)
-library(tigris)
-library(acs)
-library(stringr)
 library(sf)
 library(dplyr)
 library(leaflet)
 
-#************************#
-# API Key Input
-#************************#
-# set your API key (retrieve your personal API key from http://api.census.gov/data/key_signup.html)
-api.key.install('92a362005671c1729d433cdc54b9f49ba399300c', file = 'key.rda')
-options(tigris_use_cache = TRUE)
+# Read in Shapefile with Demographic Data
 
 
 # Define UI ----
 ui <- fluidPage(
-  selectInput(inputId = "DATA_YEAR", 
-              "Choose a Year",
-              c("2009" = 2009,
-                "2014" = 2014,
-                "2019" = 2019)),
-  radioButtons(inputId = "GEOGRAPHY",
+    radioButtons(inputId = "GEOGRAPHY",
                "Geographic Boundaries of Data",
                c("Census Tracts" = "tracts",
                  "Zip Codes" = "zipcode")),
-  checkboxGroupInput(inputId = "COUNTIES",
-                     "Select which counties you want data for",
-                     c("Lapeer" = 87,
-                       "Macomb" = 99,
-                       "Monroe" = 115,
-                       "Oakland" = 125,
-                       "StClaire" = 147,
-                       "Wayne" = 163),
-                     selected = 163),
   actionButton("recalc", "Go!"),
   # actionButton("downloadSHP", "Download Shapefile"),
   # actionButton("downloadCSV", "Download .CSV File"),
   br(),
-  p("The plot won't update until the button is clicked."),
+  p("Select the desired demographics to visualize."),
   leafletOutput(outputId = "demo")
 )
 
